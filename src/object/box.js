@@ -51,12 +51,15 @@ class Box extends Object {
         var boxList = this.world.getObjectListByType(Box);
         var wallList = this.world.getObjectListByType(Wall);
         boxList.forEach(box => {
+            // Do not treat ownself as wall
             if (box.id == this.id) return;
 
+            // Treat other boxes the same way as wall
             wallList.push(box);
         })
 
         wallList.forEach(wall => {
+            // Calculate bounding box for boxes and walls
             var bw = this.x - this.width / 2;
             var bn = this.y - this.height / 2;
             var be = this.x + this.width / 2;
@@ -67,6 +70,7 @@ class Box extends Object {
             var we = wall.x + wall.width / 2;
             var ws = wall.y + wall.height / 2;
 
+            // Out of boundary box, skip
             if (we < bw + this.vx) return;
             if (ww > be + this.vx) return;
             if (ws < bn + this.vy) return;
@@ -85,7 +89,7 @@ class Box extends Object {
                     this.y = wn - this.height / 2;
                     this.vy = 0;
 
-                    // Jump using space
+                    // Jump using space, a wall/box must be below
                     if (this.world.key.isDown(this.keyJump)) {
                         this.jump = true;
                     }
@@ -114,7 +118,8 @@ class Box extends Object {
 
     draw(context) {
         context.fillStyle = this.color;
-        context.fillRect(this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
+        context.translate(this.x, this.y);
+        context.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
     }
 }
 

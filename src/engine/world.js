@@ -2,13 +2,13 @@ import Key from "./key.js";
 import Mouse from "./mouse.js";
 
 class World {
-    constructor(canvasId, fps) {
+    constructor(canvasId, fpsLimit) {
         this.canvas = document.getElementById(canvasId);
         this.context = this.canvas.getContext('2d');
         this.width = this.canvas.width;
         this.height = this.canvas.height;
 
-        this.fpsLimit = fps;
+        this.fpsLimit = fpsLimit;
         this.fpsInterval = 1000 / this.fpsLimit;
         this.fps = 0;
         this.frameCount = 0;
@@ -31,12 +31,13 @@ class World {
             return;
         }
 
-        if (curTimestamp % 1000 < (this.prevTimestamp + elapsed % this.fpsInterval) % 1000) {
+        elapsed %= this.fpsInterval;
+        if (curTimestamp % 1000 < (this.prevTimestamp + elapsed) % 1000) {
             this.fps = this.frameCount;
             this.frameCount = 0;
         }
 
-        this.prevTimestamp = curTimestamp - (elapsed % this.fpsInterval);
+        this.prevTimestamp = curTimestamp - elapsed;
         ++this.frameCount;
 
         await this.step();
@@ -49,8 +50,7 @@ class World {
     }
 
     draw() {
-        this.context.clearRect(0, 0, this.width, this.height);this.context.fillStyle = 'red';
-        this.context.fillText(this.frameCount, 50, 50);
+        this.context.clearRect(0, 0, this.width, this.height);
         Object.values(this.objectMap).forEach(object => {
             this.context.save();
             object.draw.bind(object)(this.context)

@@ -2,7 +2,7 @@ import World from './engine/world.js';
 
 import Box from './object/box.js';
 import Wall from './object/wall.js';
-import Wall from './object/display.js';
+import Display from './object/display.js';
 
 window.onload = () => {
     var world = new World('canvas', 60);
@@ -14,25 +14,28 @@ window.onload = () => {
     world.addObject(box1);
     world.addObject(box2);
     world.addObject(box3);
+    world.addObject(display);
 
+    // Bottom floor
     for (var i = 0; i < 20; ++i) {
         world.addObject(new Wall(25 + 20 * i, 500, 20, 20, 'rgba(255, 0, 0, 0.5)'));
     }
 
+    // Middle floor
     for (var i = 5; i < 20; ++i) {
         world.addObject(new Wall(25 + 20 * i, 480, 20, 20, 'rgba(255, 0, 0, 0.5)'));
     }
 
+    // Top floor
     for (var i = 10; i < 20; ++i) {
         if (i == 16) continue;
         world.addObject(new Wall(25 + 20 * i, 460, 20, 20, 'rgba(255, 0, 0, 0.5)'));
     }
 
+    // Floating floor
     for (var i = 0; i < 5; ++i) {
         world.addObject(new Wall(25 + 20 * i, 400, 20, 20, 'rgba(255, 0, 0, 0.5)'));
     }
 
     world.update();
-
-    setInterval(() => window.document.title = 'FPS: ' + world.fps, 1000);
 }

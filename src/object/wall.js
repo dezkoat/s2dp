@@ -11,19 +11,14 @@ class Wall extends Object {
         this.color = color;
         this.rot = 0;
         this.mouse = false;
-
-        this.dir = 0;
     }
 
     step() {
-        var box = this.world.getObjectListByType(Box)[0];
-        this.dir = Math.atan((box.y - this.y) / (box.x - this.x));
     }
 
     draw(context) {
         context.fillStyle = this.color;
         context.translate(this.x, this.y);
-        context.rotate(this.dir);
         context.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
     }
 }
